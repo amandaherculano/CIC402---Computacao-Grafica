@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script>
+        const ctx = canvas.getContext("2d")
+
+        const W = canvas.width
+        const H = canvas.height
+        const BG = "lightgray"
+        const FG = "green"
+
+        function desenharFundo(){
+            ctx.fillStyle = BG
+            ctx.fillRect(0, 0, W, H)
+        }
+
+        function mapearCoordenadas({x, y}){
+            return {
+            x: ((x + 1) / 2) * W,
+            y: (1 - (y + 1) / 2) * H
+            }
+        }
+
+        function desenharPonto({x, y}, color=FG){
+            ctx.lineWidth = 5
+            ctx.strokeStyle = FG
+            ctx.beginPath()
+            ctx.arc(x, y, 1, 0, Math.PI * 2)
+            ctx.stroke()
+        }
+
+        var pontosOrigs = []
+        for(let x=-1; x <= 1; x += 0.25)
+            for(let y=-1; y <= 1; y += 0.25)
+            pontosOrigs.push({x:x, y:y})
+
+        desenharFundo()
+        // pontosOrigs.map(mapearCoordenadas).map(desenharPonto)
+        
+        function desenharLinha(pi, pf, color=FG){
+            ctx.lineWidth = 2
+            ctx.strokeStyle = color
+            ctx.beginPath()
+            ctx.moveTo(pi.x, pi.y)
+            ctx.lineTo(pf.x, pf.y)
+            ctx.stroke()
+        }
+
+        function desenharPoligono(pontos, color=FG){
+            ctx.lineWidth = 2
+            ctx.strokeStyle = color
+            ctx.beginPath()
+
+            ctx.moveTo(pontos[0].x, pontos[0].y)
+            for(let i=1; i<pontos.length; i++)
+                ctx.lineTo(pontos[i].x, pontos[i].y)
+            ctx.closePath()
+
+            ctx.stroke()
+        }
+
+
+        var pontos = [
+            {x: 0.25, y: 0.25},
+            {x: 0.25, y: -0.25},
+            {x: -0.25, y: -0.25},
+            {x: -0.25, y: 0.25},
+        ]
+
+
+        const ps = pontos.map(mapearCoordenadas)
+        ps.map(desenharPonto)
+        desenharPoligono(ps)
+
+
+
+    </script>
+
+    </body>
+</html>
