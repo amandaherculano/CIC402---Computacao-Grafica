@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script src="utils.js"> 
+        //injetando codigo parte 2
+    </script>
+    <script>
+        desenharFundo()
+
+        var poligono = [
+        {x: -0.5, y: -0.5},
+        {x:  0.5, y: -0.5},
+        {x:  0.0, y:  0.5},
+        ]
+
+        desenhar(poligono)
+
+        const XMIN = -1
+        const XMAX = 1
+
+        const YMIN = -1
+        const YMAX = 1
+
+        
+        function desenhaQuadriculado(celula, cor=BG, linha=1){
+            for(let i=XMIN; i<=XMAX; i += celula){
+                desenharLinha(
+                    mapearCoordenadas({x:i, y:YMAX}),
+                    mapearCoordenadas({x:i, y:YMIN}),
+                cor, 
+                linha)
+                desenharLinha(
+                    mapearCoordenadas({x:XMAX, y:i}),
+                    mapearCoordenadas({x:XMIN, y:i}),
+                cor, 
+                linha)
+            }
+        }
+
+        const celula = 0.1
+        desenhaQuadriculado(celula, "gray")
+
+
+        function rayCastingPoligono(pontos){
+            return rayCasting(poligono, pontos)
+        }
+
+        const centros = procuraCentros(celula).map(rayCastingPoligono)
+        centros.map((ponto) => desenharPonto(mapearCoordenadas(ponto), ponto.dentro ? "red" : "gray", 2))
+
+
+        function desenhaQuadradoPeloCentro({x, y}, lado, cor=FG){
+            ctx.fillStyle = cor
+            ctx.fillRect((x-lado/2), (y - lado/2), lado, lado)
+            ctx.stroke()
+        }
+
+        centros
+            .filter(ponto => ponto.dentro)
+            .map(ponto => desenhaQuadradoPeloCentro(mapearCoordenadas(ponto),
+                                            mapearDistancia(celula),
+                                            `rgba(100, 255, 100, 0.5)`))
+
+
+    </script>
+
+</body>
+</html>
