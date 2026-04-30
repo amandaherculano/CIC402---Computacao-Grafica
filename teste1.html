@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parte 4-Transformações 3D</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script src="utils.js"></script>
+    <script>
+
+        desenharFundo()
+        const RESOLUCAO = 10
+        const celula = 1 / RESOLUCAO
+        const distancia = mapearDistancia(celula)
+
+        const poligono1 = [
+        {x: -0.25, y: -0.25, z: 1},
+        {x:  0.75, y: -0.25, z: 1},
+        {x:  0.75, y:  0.75, z: 1},
+        {x: -0.25, y:  0.75, z: 1},
+        ]
+        const projecao1 = poligono1.map(projecao)
+        cor1 = "green"
+
+        const poligono2 = [
+        {x: -0.75, y: -0.75, z: 1.5},
+        {x:  0.25, y: -0.75, z: 1.5},
+        {x:  0.25, y:  0.25, z: 1.5},
+        {x: -0.75, y:  0.25, z: 1.5},
+        ]
+        const projecao2 = poligono2.map(projecao)
+        cor2 = "blue"
+
+        desenhar(projecao1, cor1)
+        desenhar(projecao2, cor2)
+
+        const centros = procuraCentros(celula)
+
+        const rc1 = centros.map(ponto => rayCasting(projecao1, ponto))
+        const rc2 = centros.map(ponto => rayCasting(projecao2, ponto))
+
+        centros.map(mapearCoordenadas).map(ponto => desenharPonto(ponto, "darkgray", 2))
+
+        rc1.filter(ponto => ponto.dentro)
+            .map(mapearCoordenadas)
+            .map(ponto => desenharPonto(ponto, cor1, 2))
+
+        rc2.filter(ponto => ponto.dentro)
+            .map(mapearCoordenadas)
+            .map(ponto => desenharPonto(ponto, cor2, 2))
+
+        desenhaQuadriculado(celula, "darkgray", 2)
+
+
+    </script>
+
+</body>
+</html>
